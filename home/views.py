@@ -64,41 +64,42 @@ def resources(request):
 
 def post(request):
     if request.method=='POST':
-        acc_bal = Bank.objects.get(profile_user=request.user)
-        account_bal = acc_bal.account_bal
+        #acc_bal = Bank.objects.get(profile_user=request.user)
+        account_bal = 0
         author = request.user
         title = request.POST['content-title']
         body = request.POST['content-area']
         specialkey = editProfile.objects.get(profile_user= request.user)
         key = specialkey.key
-        vectorizer = pickle.load(open('E:/Anonimo/Anonimo-ML/home/vectorizer.pickle','rb'))
-        print("-------------------------------")
-        examples = body
-        a = preprocess(examples)
-        example_counts = vectorizer.transform([a])
-        model = pickle.load(open('E:/Anonimo/Anonimo-ML/home/model1.pkl','rb'))
-        prediction=model.predict(example_counts) 
-        print(prediction)
+        # vectorizer = pickle.load(open('E:/Anonimo/Anonimo-ML/home/vectorizer.pickle','rb'))
+        # print("-------------------------------")
+        # examples = body
+        # a = preprocess(examples)
+        # example_counts = vectorizer.transform([a])
+        # model = pickle.load(open('E:/Anonimo/Anonimo-ML/home/model1.pkl','rb'))
+        # prediction=model.predict(example_counts) 
+        # print(prediction)
 
 
-        if prediction[0]=="suicide":
-            mentalH = "suicide"
-            print("Inside IF")
-            userState = editProfile.objects.get(profile_user= request.user)
-            user_mentalH_count = userState.count_mentalH
-            user_mentalH_count+=1
-            userState.count_mentalH= user_mentalH_count
-            userState.save()
+        # if prediction[0]=="suicide":
+        #     mentalH = "suicide"
+        #     print("Inside IF")
+        #     userState = editProfile.objects.get(profile_user= request.user)
+        #     user_mentalH_count = userState.count_mentalH
+        #     user_mentalH_count+=1
+        #     userState.count_mentalH= user_mentalH_count
+        #     userState.save()
 
             
 
-        elif prediction[0]=="non-suicide":
-            mentalH = "non-suicide"
+        # elif prediction[0]=="non-suicide":
+        #     mentalH = "non-suicide"
 
         
-        ins = Post(author=author, title=title,body=body,slug=key,mentalH=mentalH)
+        ins = Post(author=author, title=title,body=body,slug=key,mentalH="non-suicide")
         ins.save()
         print("Data has been successfully saved!")
+        redirect('/settings')
         #return render(request,'anonym.html',{'account_bal':account_bal})
     return render(request,'post.html')
 
